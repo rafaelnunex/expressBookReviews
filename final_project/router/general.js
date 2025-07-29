@@ -25,55 +25,107 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-    return res.status(200).send(JSON.stringify(books, null, 4));
+    let searchPromisse = new Promise((resolve, reject) => {
+        res.status(200).send(JSON.stringify(books, null, 4));
+        resolve("Finish with success!");
+    });
+
+    searchPromisse
+        .then((successMessage) => {
+            console.log(successMessage);
+        })
+        .catch((error) => {
+            console.error("Error: " + error.message);
+        });
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-    const isbn = req.params.isbn;
-    let bookDetails = books[isbn];
+    let searchPromisse = new Promise((resolve, reject) => {
+        const isbn = req.params.isbn;
+        let bookDetails = books[isbn];
 
-    if (bookDetails) {
-        return res.status(200).send(JSON.stringify(bookDetails, null, 4));
-    } else {
-        return res.status(400).json({ message: "There is no book with the ISBN code: " + isbn });
-    }
+        if (bookDetails) {
+            res.status(200).send(JSON.stringify(bookDetails, null, 4));
+            resolve("Finish with success!");
+        } else {
+            const errorMessage = "There is no book with the ISBN code: " + isbn
+            res.status(400).json({ message: errorMessage });
+            reject(new Error(errorMessage));
+        }
+    });
+
+    searchPromisse
+        .then((successMessage) => {
+            console.log(successMessage);
+        })
+        .catch((error) => {
+            console.error("Error: " + error.message);
+        });
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-    const author = req.params.author;
-    let booksFiltered = []
     
-    for (const book of Object.values(books)) {
-        if (book["author"] === author) {
-            booksFiltered.push(book)
+    let searchPromisse = new Promise((resolve, reject) => {
+        const author = req.params.author;
+        let booksFiltered = []
+        
+        for (const book of Object.values(books)) {
+            if (book["author"] === author) {
+                booksFiltered.push(book)
+            }
         }
-    }
+    
+        if (booksFiltered.length > 0 ) {
+            res.status(200).send(JSON.stringify(booksFiltered, null, 4));
+            resolve("Finish with success!");
+        } else {
+            const errorMessage = "There is no book of the Author: " + author
+            res.status(400).json({ message: errorMessage });
+            reject(new Error(errorMessage));
+        }
+    });
 
-    if (booksFiltered.length > 0 ) {
-        return res.status(200).send(JSON.stringify(booksFiltered, null, 4));
-    } else {
-        return res.status(400).json({ message: "There is no book of the Author: " + author });
-    }
+    searchPromisse
+        .then((successMessage) => {
+            console.log(successMessage);
+        })
+        .catch((error) => {
+            console.error("Error: " + error.message);
+        });
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-    const title = req.params.title;
-    let booksFiltered = []
     
-    for (const book of Object.values(books)) {
-        if (book["title"] === title) {
-            booksFiltered.push(book)
+    let searchPromisse = new Promise((resolve, reject) => {
+        const title = req.params.title;
+        let booksFiltered = []
+        
+        for (const book of Object.values(books)) {
+            if (book["title"] === title) {
+                booksFiltered.push(book)
+            }
         }
-    }
+    
+        if (booksFiltered.length > 0 ) {
+            res.status(200).send(JSON.stringify(booksFiltered, null, 4));
+            resolve("Finish with success!");
+        } else {
+            const errorMessage = "There is no book of the Title: " + title
+            res.status(400).json({ message: errorMessage });
+            reject(new Error(errorMessage));
+        }
+    });
 
-    if (booksFiltered.length > 0 ) {
-        return res.status(200).send(JSON.stringify(booksFiltered, null, 4));
-    } else {
-        return res.status(400).json({ message: "There is no book of the Title: " + title });
-    }
+    searchPromisse
+        .then((successMessage) => {
+            console.log(successMessage);
+        })
+        .catch((error) => {
+            console.error("Error: " + error.message);
+        });
 });
 
 //  Get book review
